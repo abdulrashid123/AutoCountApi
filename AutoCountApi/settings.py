@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'statement',
-    'corsheaders'
+    'corsheaders',
+    'django_celery_results',
+    'django_celery_beat'
+
 ]
 
 MIDDLEWARE = [
@@ -109,7 +112,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 
@@ -134,3 +137,16 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+
+#CELERY SETTINGS
+
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379'
+accept_content = ["application/json"]
+result_serializer = 'json'
+task_serializer = 'json'
+timezone = 'Asia/Kolkata'
+result_backend = 'django-db'
+
+#CELERY BEAT
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
