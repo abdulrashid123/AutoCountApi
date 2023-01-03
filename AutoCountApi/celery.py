@@ -5,7 +5,7 @@ from celery import Celery
 from celery.schedules import crontab
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'AutoCountApi.settings')
-app = Celery('AutoCountApi')
+app = Celery('AutoCountApi',broker='redis://127.0.0.1:6379')
 app.conf.enable_utc = False
 app.conf.update(timezone='Asia/Kolkata')
 app.config_from_object(settings, namespace='CELERY')
