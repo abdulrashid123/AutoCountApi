@@ -2,20 +2,23 @@ from Parser.Base import Base
 import pandas as pd
 from datetime import datetime
 from statement.models import Statement,StatementUpload
+import tabula
+
+
 class Hdfc(Base):
+    DATE_FORMAT = "%d/%m/%y"
 
     def __init__(self,filepath):
-        super().__init__(filepath)
-
-
-    def check_date_range(self,date):
-        for each in self.ranges:
-            start = each[0]
-            end = each[1]
-            if start <= date <= end:
-                return True
-        else:
-            return False
+        super().__init__()
+        try:
+            self.df_list = tabula.read_pdf(filepath, stream=True, guess=True, pages='all',
+                                      multiple_tables=True,
+                                      pandas_options={
+                                          'header': None}
+                                      )
+            print(type(self.df_list))
+        except Exception as e:
+            print('The Error is', e)
 
     def get_parsed_frame(self,bank_obj,stat_bank_upl_obj):
         for each in self.df_list:
@@ -43,8 +46,7 @@ class Hdfc(Base):
         for index, row in frame.iterrows():
             date, description, reference, debit, credit = (
             row['Date'], row['Narration'], row['Chq./Ref.No.'], row['Withdrawal Amt.'], row['Deposit Amt.'])
-            d = datetime.strptime(date, "%d/%m/%y")
-            date = d.strftime("%Y-%m-%d")
+            date = self.convert_date_format(date)
             if not self.check_date_range(date):
                 if credit is None:
                     credit = 0

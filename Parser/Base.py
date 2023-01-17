@@ -1,26 +1,34 @@
-import tabula
+
 import pandas as pd
 from statement.models import StatementUpload
+from datetime import datetime
 
 class Base:
-    def __init__(self,filepath):
+    GLOBAL_DATE_FORMAT = "%Y-%m-%d"
+
+    def __init__(self):
         objs = StatementUpload.objects.filter(bank__name=self.__class__.__name__)
         self.ranges = []
         for each in objs:
             if each.startDate and each.endDate:
                 self.ranges.append([str(each.startDate), str(each.endDate)])
         print(self.ranges)
-        try:
-            self.df_list = tabula.read_pdf(filepath, stream=True, guess=True, pages='all',
-                                      multiple_tables=True,
-                                      pandas_options={
-                                          'header': None}
-                                      )
-            print(type(self.df_list))
-        except Exception as e:
-            print('The Error is', e)
+        #
         self.df = pd.DataFrame()
 
+    def convert_date_format(self,date):
+        d = datetime.strptime(date, self.DATE_FORMAT)
+        date = d.strftime(self.GLOBAL_DATE_FORMAT)
+        return date
+
+    def check_date_range(self,date):
+        for each in self.ranges:
+            start = each[0]
+            end = each[1]
+            if start <= date <= end:
+                return True
+        else:
+            return False
 
     def parse_statement(self,bank_obj,stat_bank_upl_obj):
         rows_statements = []
@@ -34,6 +42,7 @@ class Base:
                 stat_bank_upl_obj.errorMessage = "File already uploaded"
                 stat_bank_upl_obj.error = True
         except Exception as e:
+            print(e)
             errorMessage = str(e)
             stat_bank_upl_obj.errorMessage = errorMessage
             stat_bank_upl_obj.error = True

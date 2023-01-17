@@ -30,7 +30,7 @@ class Statement(models.Model):
     statementUpload = models.ForeignKey(StatementUpload,blank=True,null=True,on_delete=models.CASCADE)
     date = models.DateField(blank=True,null=True)
     description = models.CharField(max_length=2000,blank=True,null=True)
-    reference = models.CharField(max_length=200)
+    reference = models.CharField(max_length=200,blank=True,null=True)
     debit = models.FloatField(default=0)
     credit = models.FloatField(default=0)
     balance = models.FloatField(default=0)

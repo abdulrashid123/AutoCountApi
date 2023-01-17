@@ -1,6 +1,7 @@
 from celery import shared_task
 from datetime import datetime
 from Parser.Hdfc import Hdfc
+from Parser.Maharashtra import Maharashtra
 from statement.models import StatementUpload,Statement,Bank
 from django.conf import settings
 import os
