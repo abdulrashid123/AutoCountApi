@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure--fp%-yfu+9k(zcakruamm)ccdilsitd2rrcvvcl5nreb8is((-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -136,7 +136,9 @@ MEDIA_URL = '/media/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+]
 
 
 #CELERY SETTINGS
@@ -146,7 +148,7 @@ accept_content = ["application/json"]
 result_serializer = 'json'
 task_serializer = 'json'
 timezone = 'Asia/Kolkata'
-result_backend = 'django-db'
+CELERY_RESULT_BACKEND = 'django-db'
 
 #CELERY BEAT
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
